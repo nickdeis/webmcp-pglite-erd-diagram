@@ -19,4 +19,8 @@
 
 - [x] Overlapping multi-column index groups of one kind get distinct colours; self-referencing FKs draw a loop
 
+- [x] Agent bridge: vendored `@mcp-b/webmcp-local-relay` embed behind an opt-in toolbar toggle so Claude Desktop / Cursor / Claude Code can use the tools; verified with a real relay (`scripts/verify-relay.mjs`); part-2 spec folded into `specs/webmcp.md`
+
 ## Ideas / next
+
+- [ ] Show relay connection status in the bridge banner (the relay widget reports none today)

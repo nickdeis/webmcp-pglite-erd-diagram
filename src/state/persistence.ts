@@ -32,3 +32,12 @@ export const writeStoredDdl = (storage: StorageLike, ddl: string): void => {
 /** Precedence: shared URL, then the last local edit, then the sample. */
 export const initialDdl = (hash: string, storage: StorageLike, sample: string): string =>
   ddlFromHash(hash) ?? readStoredDdl(storage) ?? sample
+
+const FLAG_ON = '1'
+
+export const readStoredFlag = (storage: StorageLike, key: string): boolean =>
+  safely(() => storage.getItem(key)) === FLAG_ON
+
+export const writeStoredFlag = (storage: StorageLike, key: string, on: boolean): void => {
+  safely(() => storage.setItem(key, on ? FLAG_ON : '0'))
+}

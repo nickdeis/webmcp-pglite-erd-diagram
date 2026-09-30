@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "@babel/core": "^8.0.6",
+    "@mcp-b/webmcp-local-relay": "^5.1.0",
     "@mcp-b/webmcp-types": "^5.1.0",
     "@rolldown/plugin-babel": "^0.2.4",
     "@types/babel__core": "^7.20.5",

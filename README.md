@@ -14,6 +14,7 @@ resulting catalog is rendered as an interactive diagram (React Flow + ELK). Noth
 - DDL is saved in the URL hash (shareable, never sent anywhere) and localStorage
 - Export high-res PNG, SVG, or a standalone diagram-only HTML file (no DDL, no PGlite)
 - [WebMCP](specs/webmcp.md) tools (`read_sql`, `format_sql`, `validate_sql`, `write_sql`, `read_schema`) so an LLM extension can edit the schema for people who don't write SQL; the polyfill is lazy-loaded and never part of the HTML export. An "Updated by AI · Restore previous" bar undoes an agent's rewrite
+- Opt-in **Agent bridge** for desktop agents (Claude Desktop, Cursor, Claude Code) through the local `@mcp-b/webmcp-local-relay`; see below
 - VS Code "2026 Dark" palette with neon accents
 
 ## Run
@@ -32,5 +33,13 @@ Notes:
 - `dist/` uses ES modules, which browsers refuse to load from `file://`; serve it from any static host (or `bunx vite preview`). It makes no network requests once loaded.
 - For a single self-contained file, use the **HTML** export in the toolbar: it is diagram-only (no DDL editor, no PGlite) and opens from `file://`.
 - `node scripts/screenshot.mjs <url> <out.png>` drives system Chrome (playwright-core) for visual checks and lists external requests (should be none).
+
+## Connecting a desktop agent
+
+1. Click **Agent bridge** in the toolbar (off by default; the page then connects to `ws://127.0.0.1:9333`).
+2. Run the relay: `npx @mcp-b/webmcp-local-relay`.
+3. Add it to your agent, e.g. `claude mcp add webmcp-local-relay -- npx -y @mcp-b/webmcp-local-relay@latest`.
+
+The agent can then read, validate, format and rewrite the DDL in that tab. Verify the chain with `URL=http://localhost:5199/ node scripts/verify-relay.mjs`. Details and limitations: [specs/webmcp.md](specs/webmcp.md).
 
 See [DESIGN.md](DESIGN.md) for architecture, [PLAN.md](PLAN.md) and [TODO.md](TODO.md) for status.

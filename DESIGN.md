@@ -14,11 +14,13 @@ flowchart LR
   Layout --> Standalone
   Viewer[Viewer template: React + xyflow only] --> Standalone
   Agent[LLM extension] -->|document.modelContext| Tools[WebMCP tools]
+  Desktop[Claude Desktop / Cursor / Claude Code] <-->|stdio| Relay[local relay]
+  Relay <-->|WebSocket, opt-in| Tools
   Tools -->|read / write DDL| Editor
   Tools -->|validate / read_schema| DB
 ```
 
-The WebMCP code (`src/mcp/`) and its lazy polyfill are never imported by the viewer, so they stay out of the HTML export. See [specs/webmcp.md](specs/webmcp.md).
+The WebMCP code (`src/mcp/`), its lazy polyfill and the relay files (`dist/relay/`, only loaded when the user turns on the agent bridge) are never part of the viewer, so they stay out of the HTML export. See [specs/webmcp.md](specs/webmcp.md).
 
 ## Build targets
 

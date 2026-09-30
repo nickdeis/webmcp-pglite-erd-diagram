@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { ddlFromHash, ddlToHash, initialDdl, readStoredDdl, STORAGE_KEY } from './persistence'
+import {
+  ddlFromHash,
+  ddlToHash,
+  initialDdl,
+  readStoredDdl,
+  readStoredFlag,
+  STORAGE_KEY,
+  writeStoredFlag,
+} from './persistence'
 
 const memoryStorage = (items: Record<string, string> = {}) => ({
   getItem: (key: string) => items[key] ?? null,
@@ -41,5 +49,29 @@ describe('initialDdl', () => {
     }
     expect(readStoredDdl(broken)).toBeNull()
     expect(initialDdl('', broken, 'sample')).toBe('sample')
+  })
+})
+
+describe('stored flags', () => {
+  it('round-trips and defaults to off', () => {
+    const storage = memoryStorage()
+    expect(readStoredFlag(storage, 'k')).toBe(false)
+    writeStoredFlag(storage, 'k', true)
+    expect(readStoredFlag(storage, 'k')).toBe(true)
+    writeStoredFlag(storage, 'k', false)
+    expect(readStoredFlag(storage, 'k')).toBe(false)
+  })
+
+  it('treats blocked storage as off and never throws', () => {
+    const broken = {
+      getItem: () => {
+        throw new Error('blocked')
+      },
+      setItem: () => {
+        throw new Error('blocked')
+      },
+    }
+    expect(readStoredFlag(broken, 'k')).toBe(false)
+    expect(() => writeStoredFlag(broken, 'k', true)).not.toThrow()
   })
 })

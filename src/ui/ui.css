@@ -122,3 +122,58 @@
 .restore-banner button:hover {
   border-color: var(--neon-violet);
 }
+
+.toolbar button.pressed {
+  color: var(--neon-violet);
+  border-color: var(--neon-violet);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--neon-violet) 40%, transparent);
+}
+
+.bridge-banner {
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--neon-violet) 8%, var(--bg-panel));
+  border-top: 1px solid var(--neon-violet);
+  font-size: 12px;
+}
+
+.bridge-banner summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--neon-violet);
+  cursor: pointer;
+}
+
+.bridge-banner summary span {
+  flex: 1;
+}
+
+.bridge-banner summary button {
+  padding: 2px 8px;
+  color: var(--fg);
+  background: var(--bg-widget);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.bridge-banner p,
+.bridge-banner ol {
+  margin: 6px 0;
+  color: var(--fg-muted);
+}
+
+.bridge-banner ol {
+  padding-left: 18px;
+}
+
+.bridge-banner code {
+  display: inline-block;
+  padding: 1px 5px;
+  background: var(--bg-widget);
+  border-radius: 4px;
+  color: var(--fg);
+  font-family: var(--font-mono);
+  user-select: all;
+}
