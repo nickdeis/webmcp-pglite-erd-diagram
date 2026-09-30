@@ -11,3 +11,6 @@ Application source. Each subdirectory has its own `CLAUDE.md`.
 - `editor/` — CodeMirror editor, autocomplete, format (see `editor/CLAUDE.md`).
 - `ui/` — app chrome (see `ui/CLAUDE.md`).
 - `state/` — DDL persistence in URL hash + localStorage (see `state/CLAUDE.md`).
+- `export/` — PNG/SVG/standalone HTML export (see `export/CLAUDE.md`).
+- `viewer/` — diagram-only entry for the standalone HTML (see `viewer/CLAUDE.md`).
+- `virtual.d.ts` — types for the `virtual:viewer-template` module.

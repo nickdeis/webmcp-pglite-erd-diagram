@@ -7,6 +7,10 @@ import { useSchema } from './db/useSchema'
 import { Diagram } from './diagram/Diagram'
 import { useDiagram } from './diagram/useDiagram'
 import { usePersistedDdl } from './state/usePersistedDdl'
+import { ReactFlowProvider } from '@xyflow/react'
+import { LuWandSparkles } from 'react-icons/lu'
+import { ExportButtons } from './export/ExportButtons'
+import { ToolbarButton } from './ui/ToolbarButton'
 import { AppLayout } from './ui/AppLayout'
 import './theme/tokens.css'
 
@@ -17,20 +21,32 @@ export function App() {
   const format = () => formatSql(ddl).then(setDdl, console.error)
 
   return (
-    <AppLayout
-      onFormat={format}
-      editor={
-        <>
-          <SqlEditor
-            value={ddl}
-            onChange={setDdl}
-            onFormat={format}
-            namespace={completionNamespace(schema)}
-          />
-          <ErrorBanner error={error} />
-        </>
-      }
-      diagram={<Diagram nodes={nodes} edges={edges} onNodesChange={onNodesChange} />}
-    />
+    <ReactFlowProvider>
+      <AppLayout
+        toolbar={
+          <>
+            <ToolbarButton
+              icon={LuWandSparkles}
+              label="Format"
+              title="Format SQL (Ctrl/Cmd+Shift+F)"
+              onClick={format}
+            />
+            <ExportButtons />
+          </>
+        }
+        editor={
+          <>
+            <SqlEditor
+              value={ddl}
+              onChange={setDdl}
+              onFormat={format}
+              namespace={completionNamespace(schema)}
+            />
+            <ErrorBanner error={error} />
+          </>
+        }
+        diagram={<Diagram nodes={nodes} edges={edges} onNodesChange={onNodesChange} />}
+      />
+    </ReactFlowProvider>
   )
 }

@@ -1,22 +1,19 @@
 import type { ReactNode } from 'react'
-import { LuWandSparkles } from 'react-icons/lu'
 import './ui.css'
 
 interface Props {
   editor: ReactNode
   diagram: ReactNode
-  onFormat: () => void
+  toolbar: ReactNode
 }
 
 /** Pure display: toolbar over a resizable editor pane and the diagram. */
-export function AppLayout({ editor, diagram, onFormat }: Props) {
+export function AppLayout({ editor, diagram, toolbar }: Props) {
   return (
     <div className="app">
       <header className="toolbar">
         <strong className="brand">pglite-diagram</strong>
-        <button onClick={onFormat} title="Format SQL (Ctrl/Cmd+Shift+F)">
-          <LuWandSparkles size={14} /> Format
-        </button>
+        {toolbar}
       </header>
       <main className="panes">
         <section className="editor-pane">{editor}</section>

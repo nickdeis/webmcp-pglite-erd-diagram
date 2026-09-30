@@ -10,8 +10,9 @@
 
 - [x] M4: persistence (URL hash via lz-string + localStorage, precedence URL > local > sample)
 
+- [x] M5: PNG/SVG export (html-to-image, 3x), viewer entry, standalone diagram-only HTML export (verified offline via file://)
+
 ## Next
 
-- [ ] M5: PNG/SVG export, viewer entry, standalone HTML export
 - [ ] M6: static + single-file builds, offline verification
 - [ ] M7: polish (sample DDL, empty/error states)

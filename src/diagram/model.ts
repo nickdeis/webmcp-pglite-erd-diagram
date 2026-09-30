@@ -1,6 +1,6 @@
 import { MarkerType, type Edge, type Node } from '@xyflow/react'
 import type { Index, Schema, Table } from '../db/types'
-import { tableKey, type Point } from '../layout/elk'
+import { tableKey, type Point } from '../layout/keys'
 import { tableSize, type Size } from '../layout/sizing'
 
 export interface TableNodeData extends Record<string, unknown> {

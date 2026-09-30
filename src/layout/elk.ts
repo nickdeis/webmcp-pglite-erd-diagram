@@ -1,13 +1,7 @@
 import ELK from 'elkjs/lib/elk.bundled.js'
-import type { Schema, Table } from '../db/types'
+import type { Schema } from '../db/types'
+import { tableKey, type Point } from './keys'
 import { tableSize } from './sizing'
-
-export interface Point {
-  x: number
-  y: number
-}
-
-export const tableKey = (t: Pick<Table, 'schema' | 'name'>) => `${t.schema}.${t.name}`
 
 const LAYOUT_OPTIONS = {
   'elk.algorithm': 'layered',

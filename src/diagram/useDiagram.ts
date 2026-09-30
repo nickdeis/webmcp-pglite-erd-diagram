@@ -1,7 +1,8 @@
 import { useEdgesState, useNodesState, type OnNodesChange } from '@xyflow/react'
 import { useEffect, useRef } from 'react'
 import type { Schema } from '../db/types'
-import { layoutSchema, type Point } from '../layout/elk'
+import { layoutSchema } from '../layout/elk'
+import type { Point } from '../layout/keys'
 import { buildEdges, buildNodes, type TableNode } from './model'
 
 /** Lays out the schema with ELK, keeping positions the user has dragged tables to. */

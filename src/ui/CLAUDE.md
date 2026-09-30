@@ -2,5 +2,6 @@
 
 App chrome (pure display components).
 
-- `AppLayout.tsx` — toolbar + resizable editor pane + diagram pane; receives the editor/diagram as slots.
+- `AppLayout.tsx` — toolbar slot + resizable editor pane + diagram pane; receives the editor/diagram as slots.
+- `ToolbarButton.tsx` — icon + label button.
 - `ui.css` — layout, toolbar and error-banner styles.
