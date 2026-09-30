@@ -14,7 +14,7 @@
   height: 100%;
   overflow: hidden;
   background: var(--bg-panel);
-  border: 1px solid var(--border);
+  border: 1px solid color-mix(in srgb, var(--node-color, var(--border)) 40%, var(--border));
   border-radius: 8px;
   font-family: var(--font-mono);
   font-size: 12px;
@@ -22,6 +22,10 @@
   box-shadow:
     0 0 0 1px #00000040,
     0 6px 20px #00000060;
+}
+
+.table-node.dashed {
+  border-style: dashed;
 }
 
 .table-header {
@@ -33,7 +37,7 @@
   box-sizing: border-box;
   background: var(--bg-widget);
   border-bottom: 1px solid var(--border);
-  color: var(--neon-cyan);
+  color: var(--node-color, var(--neon-cyan));
   font-weight: 600;
   font-size: 13px;
 }
@@ -179,4 +183,68 @@
 .column-row.grouped {
   background: color-mix(in srgb, var(--group-color) 7%, transparent);
   box-shadow: inset 3px 0 0 var(--group-color);
+}
+
+.relation-label {
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--node-color);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.partition-row,
+.param-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  border-bottom: 1px solid #ffffff08;
+  white-space: nowrap;
+}
+
+.partition-row {
+  height: 22px;
+  color: var(--neon-orange);
+}
+
+.partition-name {
+  flex-shrink: 0;
+}
+
+.partition-bound {
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--fg-muted);
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+}
+
+.partition-more {
+  color: var(--fg-faint);
+  font-style: italic;
+}
+
+.param-row {
+  height: 24px;
+}
+
+.param-mode {
+  color: var(--fg-muted);
+  font-size: 10px;
+}
+
+.node-handle.react-flow__handle {
+  width: 6px;
+  height: 6px;
+  min-width: 0;
+  min-height: 0;
+  background: var(--node-color);
+  border: none;
+  opacity: 0;
+  top: 17px;
 }

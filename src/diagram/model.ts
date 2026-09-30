@@ -1,30 +1,20 @@
-import { MarkerType, type Edge, type Node } from '@xyflow/react'
-import type { Index, Schema, Table } from '../db/types'
-import { tableKey, type Point } from '../layout/keys'
-import { tableSize, type Size } from '../layout/sizing'
+import type { Node } from '@xyflow/react'
+import type { Index, Schema, Table, TableFunction } from '../db/types'
+import { functionKey, tableKey, type Point } from '../layout/keys'
+import { functionSize, tableSize, type Size } from '../layout/sizing'
 
 export interface TableNodeData extends Record<string, unknown> {
   table: Table
 }
 
-export type TableNode = Node<TableNodeData, 'table'>
-
-/** Handle ids: one source and one target handle per column and side. */
-export const handleId = (column: string, role: 'source' | 'target', side: 'left' | 'right') =>
-  `${column}:${role}:${side}`
-
-export function buildNodes(schema: Schema, positions: Record<string, Point>): TableNode[] {
-  return schema.tables.map((table) => {
-    const key = tableKey(table)
-    return {
-      id: key,
-      type: 'table',
-      position: positions[key] ?? { x: 0, y: 0 },
-      data: { table },
-      ...sizeProps(tableSize(table)),
-    }
-  })
+export interface FunctionNodeData extends Record<string, unknown> {
+  fn: TableFunction
 }
+
+/** Tables, partitioned tables, views and materialized views all render as this node. */
+export type TableNode = Node<TableNodeData, 'table'>
+export type FunctionNode = Node<FunctionNodeData, 'function'>
+export type DiagramNode = TableNode | FunctionNode
 
 const sizeProps = ({ width, height }: Size) => ({
   width,
@@ -33,31 +23,17 @@ const sizeProps = ({ width, height }: Size) => ({
   initialHeight: height,
 })
 
-/** One edge per FK: from the referencing column row to the referenced column row. */
-export function buildEdges(schema: Schema, positions: Record<string, Point>): Edge[] {
-  const keys = new Set(schema.tables.map(tableKey))
-  return schema.tables.flatMap((table) =>
-    table.foreignKeys
-      .filter((fk) => keys.has(`${fk.refSchema}.${fk.refTable}`))
-      .map((fk) => {
-        const target = `${fk.refSchema}.${fk.refTable}`
-        const refLeft = (positions[target]?.x ?? 0) <= (positions[tableKey(table)]?.x ?? 0)
-        const [srcSide, tgtSide] = refLeft
-          ? (['left', 'right'] as const)
-          : (['right', 'left'] as const)
-        return {
-          id: `${tableKey(table)}:${fk.name}`,
-          source: tableKey(table),
-          target,
-          sourceHandle: handleId(fk.columns[0]!, 'source', srcSide),
-          targetHandle: handleId(fk.refColumns[0]!, 'target', tgtSide),
-          type: 'smoothstep',
-          label: fk.columns.length > 1 ? fk.columns.join(', ') : undefined,
-          markerEnd: { type: MarkerType.ArrowClosed, color: 'var(--neon-cyan)' },
-          style: { stroke: 'var(--neon-cyan)', strokeWidth: 1.5 },
-        }
-      }),
-  )
+export function buildNodes(schema: Schema, positions: Record<string, Point>): DiagramNode[] {
+  const at = (key: string) => positions[key] ?? { x: 0, y: 0 }
+  const tables = schema.tables.map((table): TableNode => {
+    const id = tableKey(table)
+    return { id, type: 'table', position: at(id), data: { table }, ...sizeProps(tableSize(table)) }
+  })
+  const functions = schema.functions.map((fn): FunctionNode => {
+    const id = functionKey(fn)
+    return { id, type: 'function', position: at(id), data: { fn }, ...sizeProps(functionSize(fn)) }
+  })
+  return [...tables, ...functions]
 }
 
 /** Indexes touching each column, so rows can show inline badges. */

@@ -7,6 +7,7 @@ resulting catalog is rendered as an interactive diagram (React Flow + ELK). Noth
 
 - DDL editor (CodeMirror) with Postgres highlighting, autocomplete from your own tables/columns, and **Format** (prettier)
 - Live diagram: tables, columns with a type icon each, PK/FK marks, foreign-key edges
+- Distinct nodes for **views** (green, dashed), **materialized views** (lime), **partitioned tables** (orange, partitions and bounds nested inside) and **table functions** (pink; `RETURNS TABLE` / `SETOF` / OUT params, arguments in and columns out), with dashed dependency edges from what they read
 - DB comments on tables, columns and indexes (small italic text)
 - Inline index badges per column — FTS, trigram, vector (hnsw/ivfflat), GIN, GiST, B-tree, hash, BRIN, SP-GiST — each with its own icon and neon colour; multi-column indexes colour every member column
 - Extensions available in DDL: `pg_trgm`, `btree_gin`, `btree_gist`, `vector`

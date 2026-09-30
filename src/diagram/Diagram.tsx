@@ -8,16 +8,17 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import './diagram.css'
-import type { TableNode as TableNodeType } from './model'
+import { FunctionNode } from './FunctionNode'
+import type { DiagramNode } from './model'
 import { FitOnFirstLayout } from './FitOnFirstLayout'
 import { TableNode } from './TableNode'
 
-const nodeTypes = { table: TableNode }
+const nodeTypes = { table: TableNode, function: FunctionNode }
 
 interface Props {
-  nodes: TableNodeType[]
+  nodes: DiagramNode[]
   edges: Edge[]
-  onNodesChange?: OnNodesChange<TableNodeType>
+  onNodesChange?: OnNodesChange<DiagramNode>
 }
 
 /** Pure presentation: no layout or database code, so the standalone viewer can reuse it. */

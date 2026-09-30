@@ -3,11 +3,12 @@ import { useEffect, useRef } from 'react'
 import type { Schema } from '../db/types'
 import { layoutSchema } from '../layout/elk'
 import type { Point } from '../layout/keys'
-import { buildEdges, buildNodes, type TableNode } from './model'
+import { buildEdges } from './edges'
+import { buildNodes, type DiagramNode } from './model'
 
 /** Lays out the schema with ELK, keeping positions the user has dragged tables to. */
 export function useDiagram(schema: Schema | null) {
-  const [nodes, setNodes, onNodesChange] = useNodesState<TableNode>([])
+  const [nodes, setNodes, onNodesChange] = useNodesState<DiagramNode>([])
   const [edges, setEdges] = useEdgesState<ReturnType<typeof buildEdges>[number]>([])
   const dragged = useRef<Record<string, Point>>({})
 
@@ -25,7 +26,7 @@ export function useDiagram(schema: Schema | null) {
     }
   }, [schema, setNodes, setEdges])
 
-  const trackDrags: OnNodesChange<TableNode> = (changes) => {
+  const trackDrags: OnNodesChange<DiagramNode> = (changes) => {
     for (const change of changes) {
       if (change.type === 'position' && change.position)
         dragged.current[change.id] = change.position

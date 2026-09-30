@@ -5,7 +5,7 @@ import { columnRowHeight } from '../layout/sizing'
 import { INDEX_STYLES } from '../theme/indexStyle'
 import { typeIcon } from '../theme/typeIcons'
 import { IndexBadge } from './IndexBadge'
-import { handleId } from './model'
+import { handleId } from './handles'
 
 interface Props {
   column: Column

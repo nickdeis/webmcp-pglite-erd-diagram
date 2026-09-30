@@ -38,7 +38,7 @@ type MCPTools = {
    * Resolves "Wrote N lines to the editor."; rejects (and changes nothing) if validation or formatting fails.
    */
   write_sql: (args: { sql: string }) => Promise<string>
-  /** Returns the schema (tables, columns, indexes, foreign keys, comments) that the current editor DDL produces. */
+  /** Returns the schema (tables, views, materialized views, partitions, table functions, columns, indexes, foreign keys, comments, dependencies) that the current editor DDL produces. */
   read_schema: () => Promise<Schema> // Schema from src/db/types.ts
 }
 ```

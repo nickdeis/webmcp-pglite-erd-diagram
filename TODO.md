@@ -15,8 +15,9 @@
 
 - [x] WebMCP: five tools (`read_sql`, `format_sql`, `validate_sql`, `write_sql`, `read_schema`), lazy polyfill, restore bar, spec updated; verified in Chrome (dev + production build)
 
+- [x] Views, materialized views, partitions (nested in parent) and table functions: introspection, distinct icons/colours, dependency edges
+
 ## Ideas / next
 
 - [ ] Distinguish overlapping multi-column indexes of the same kind (per-group colour variants)
 - [ ] Self-referencing FK edges render as a short stub; give them a loop
-- [ ] Views, materialized views, partitions

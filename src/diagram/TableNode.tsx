@@ -1,22 +1,35 @@
 import type { NodeProps } from '@xyflow/react'
-import { LuTable2 } from 'react-icons/lu'
-import { indexRowHeight } from '../layout/sizing'
+import {
+  hiddenPartitionCount,
+  indexRowHeight,
+  relationLabel,
+  visiblePartitions,
+} from '../layout/sizing'
+import { RELATION_STYLES } from '../theme/relationStyle'
 import { INDEX_STYLES } from '../theme/indexStyle'
 import { ColumnRow } from './ColumnRow'
+import { NodeHandles } from './NodeHandles'
+import { PartitionList } from './PartitionList'
+import { RelationHeader } from './RelationHeader'
 import { indexesByColumn, type TableNode as TableNodeType } from './model'
 
 export function TableNode({ data: { table } }: NodeProps<TableNodeType>) {
   const byColumn = indexesByColumn(table.indexes)
   const fkColumns = new Set(table.foreignKeys.flatMap((fk) => fk.columns))
+  const style = RELATION_STYLES[table.kind]
   return (
-    <div className="table-node">
-      <div className="table-header">
-        <LuTable2 size={14} />
-        <span className="table-name">
-          {table.schema !== 'public' && <span className="table-schema">{table.schema}.</span>}
-          {table.name}
-        </span>
-      </div>
+    <div
+      className={style.dashed ? 'table-node dashed' : 'table-node'}
+      style={{ ['--node-color' as string]: style.color }}
+    >
+      <RelationHeader
+        icon={style.icon}
+        schema={table.schema}
+        name={table.name}
+        label={relationLabel(table)}
+        title={table.definition ?? undefined}
+      />
+      <NodeHandles />
       {table.comment && <div className="comment table-comment">{table.comment}</div>}
       {table.columns.map((column) => (
         <ColumnRow
@@ -26,6 +39,12 @@ export function TableNode({ data: { table } }: NodeProps<TableNodeType>) {
           isForeignKey={fkColumns.has(column.name)}
         />
       ))}
+      {table.partitions.length > 0 && (
+        <PartitionList
+          partitions={visiblePartitions(table)}
+          hiddenCount={hiddenPartitionCount(table)}
+        />
+      )}
       {table.indexes.length > 0 && <IndexList table={table} />}
     </div>
   )
