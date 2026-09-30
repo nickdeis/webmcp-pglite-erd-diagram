@@ -10,4 +10,5 @@ Schema JSON + positions into a prebuilt viewer template (no PGlite, no editor).
 Milestones: M0 bootstrap · M1 introspection · M2 diagram · M3 editor · M4 persistence · M5 exports ·
 M6 build targets · M7 polish. Progress is tracked in [TODO.md](TODO.md).
 
-Open items: Dark 2026 palette source, prettier SQL plugin vs `sql-formatter`, single-file size.
+Decided: palette from VS Code `2026-dark.json`; formatting via prettier + prettier-plugin-sql (wraps sql-formatter).
+Open items: single-file size, bundle cost of the prettier plugin.

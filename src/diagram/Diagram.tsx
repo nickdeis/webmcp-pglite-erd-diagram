@@ -23,6 +23,8 @@ interface Props {
 export function Diagram({ nodes, edges, onNodesChange }: Props) {
   return (
     <ReactFlow
+      // Remount once tables arrive so fitView frames them (it only runs on mount).
+      key={nodes.length > 0 ? 'ready' : 'empty'}
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}

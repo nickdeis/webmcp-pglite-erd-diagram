@@ -1,0 +1,81 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  margin-right: 12px;
+  color: var(--neon-cyan);
+  font-family: var(--font-mono);
+}
+
+.toolbar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  color: var(--fg);
+  background: var(--bg-widget);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+}
+
+.toolbar button:hover {
+  border-color: var(--accent);
+  color: var(--neon-cyan);
+}
+
+.panes {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.editor-pane {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  min-width: 260px;
+  max-width: 80%;
+  overflow: auto;
+  resize: horizontal;
+  border-right: 1px solid var(--border);
+}
+
+.sql-editor {
+  flex: 1;
+  min-height: 0;
+  font-size: 13px;
+}
+
+.sql-editor .cm-editor {
+  height: 100%;
+}
+
+.error-banner {
+  padding: 8px 12px;
+  background: #f4877122;
+  border-top: 1px solid var(--error);
+  color: var(--error);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.diagram-pane {
+  flex: 1;
+  min-width: 0;
+}
