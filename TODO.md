@@ -8,9 +8,10 @@
 
 - [x] M3: CodeMirror editor, live run, errors (with line), autocomplete from schema, format SQL (prettier + prettier-plugin-sql)
 
+- [x] M4: persistence (URL hash via lz-string + localStorage, precedence URL > local > sample)
+
 ## Next
 
-- [ ] M4: persistence (URL hash + localStorage)
 - [ ] M5: PNG/SVG export, viewer entry, standalone HTML export
 - [ ] M6: static + single-file builds, offline verification
 - [ ] M7: polish (sample DDL, empty/error states)

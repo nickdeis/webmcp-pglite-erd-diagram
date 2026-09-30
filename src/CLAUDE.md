@@ -10,3 +10,4 @@ Application source. Each subdirectory has its own `CLAUDE.md`.
 - `theme/` — palette, index and type icons (see `theme/CLAUDE.md`).
 - `editor/` — CodeMirror editor, autocomplete, format (see `editor/CLAUDE.md`).
 - `ui/` — app chrome (see `ui/CLAUDE.md`).
+- `state/` — DDL persistence in URL hash + localStorage (see `state/CLAUDE.md`).

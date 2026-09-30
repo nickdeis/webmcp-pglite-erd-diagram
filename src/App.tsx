@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { completionNamespace } from './editor/completion'
 import { ErrorBanner } from './editor/ErrorBanner'
 import { formatSql } from './editor/format'
@@ -7,11 +6,12 @@ import { SAMPLE_DDL } from './db/sample'
 import { useSchema } from './db/useSchema'
 import { Diagram } from './diagram/Diagram'
 import { useDiagram } from './diagram/useDiagram'
+import { usePersistedDdl } from './state/usePersistedDdl'
 import { AppLayout } from './ui/AppLayout'
 import './theme/tokens.css'
 
 export function App() {
-  const [ddl, setDdl] = useState(SAMPLE_DDL)
+  const [ddl, setDdl] = usePersistedDdl(SAMPLE_DDL)
   const { schema, error } = useSchema(ddl)
   const { nodes, edges, onNodesChange } = useDiagram(schema)
   const format = () => formatSql(ddl).then(setDdl, console.error)
