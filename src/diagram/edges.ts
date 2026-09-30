@@ -7,6 +7,9 @@ import { handleId, nodeHandleId, type HandleSide } from './handles'
 type Positions = Record<string, Point>
 type Sides = readonly [source: HandleSide, target: HandleSide]
 
+/** React Flow's `smoothstep` edges accept `pathOptions`, which the base `Edge` type omits. */
+type SmoothStepEdge = Edge & { pathOptions?: { offset?: number } }
+
 const FK_COLOR = 'var(--neon-cyan)'
 
 /** Attach on the facing sides: the left node's right edge to the right node's left edge. */
@@ -15,13 +18,20 @@ const facingSides = (leftKey: string, rightKey: string, positions: Positions): b
 
 const arrow = (color: string) => ({ type: MarkerType.ArrowClosed, color })
 
+/** How far a self-referencing FK's loop reaches outside the node. */
+const LOOP_OFFSET = 36
+
+/** A self-referencing FK leaves and re-enters the same (right) side, drawing a loop outside the node. */
+function fkSides(source: string, target: string, positions: Positions): Sides {
+  if (source === target) return ['right', 'right']
+  return facingSides(target, source, positions) ? ['left', 'right'] : ['right', 'left']
+}
+
 /** One edge per FK: from the referencing column row to the referenced column row. */
-function foreignKeyEdge(table: Table, fk: ForeignKey, positions: Positions): Edge {
+function foreignKeyEdge(table: Table, fk: ForeignKey, positions: Positions): SmoothStepEdge {
   const source = tableKey(table)
   const target = `${fk.refSchema}.${fk.refTable}`
-  const sides: Sides = facingSides(target, source, positions)
-    ? ['left', 'right']
-    : ['right', 'left']
+  const sides = fkSides(source, target, positions)
   return {
     id: `${source}:${fk.name}`,
     source,
@@ -29,6 +39,7 @@ function foreignKeyEdge(table: Table, fk: ForeignKey, positions: Positions): Edg
     sourceHandle: handleId(fk.columns[0]!, 'source', sides[0]),
     targetHandle: handleId(fk.refColumns[0]!, 'target', sides[1]),
     type: 'smoothstep',
+    pathOptions: source === target ? { offset: LOOP_OFFSET } : undefined,
     label: fk.columns.length > 1 ? fk.columns.join(', ') : undefined,
     markerEnd: arrow(FK_COLOR),
     style: { stroke: FK_COLOR, strokeWidth: 1.5 },

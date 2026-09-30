@@ -8,6 +8,7 @@ import {
 import { RELATION_STYLES } from '../theme/relationStyle'
 import { INDEX_STYLES } from '../theme/indexStyle'
 import { ColumnRow } from './ColumnRow'
+import { indexColors } from './indexColors'
 import { NodeHandles } from './NodeHandles'
 import { PartitionList } from './PartitionList'
 import { RelationHeader } from './RelationHeader'
@@ -15,6 +16,7 @@ import { indexesByColumn, type TableNode as TableNodeType } from './model'
 
 export function TableNode({ data: { table } }: NodeProps<TableNodeType>) {
   const byColumn = indexesByColumn(table.indexes)
+  const colors = indexColors(table.indexes)
   const fkColumns = new Set(table.foreignKeys.flatMap((fk) => fk.columns))
   const style = RELATION_STYLES[table.kind]
   return (
@@ -37,6 +39,7 @@ export function TableNode({ data: { table } }: NodeProps<TableNodeType>) {
           column={column}
           indexes={byColumn.get(column.name) ?? []}
           isForeignKey={fkColumns.has(column.name)}
+          colors={colors}
         />
       ))}
       {table.partitions.length > 0 && (
@@ -45,17 +48,24 @@ export function TableNode({ data: { table } }: NodeProps<TableNodeType>) {
           hiddenCount={hiddenPartitionCount(table)}
         />
       )}
-      {table.indexes.length > 0 && <IndexList table={table} />}
+      {table.indexes.length > 0 && <IndexList table={table} colors={colors} />}
     </div>
   )
 }
 
-function IndexList({ table }: { table: TableNodeType['data']['table'] }) {
+function IndexList({
+  table,
+  colors,
+}: {
+  table: TableNodeType['data']['table']
+  colors: Map<string, string>
+}) {
   return (
     <div className="index-list">
       <div className="index-section">Indexes</div>
       {table.indexes.map((index) => {
-        const { icon: Icon, color } = INDEX_STYLES[index.kind]
+        const Icon = INDEX_STYLES[index.kind].icon
+        const color = colors.get(index.name)
         return (
           <div
             key={index.name}

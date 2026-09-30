@@ -2,7 +2,6 @@ import { Handle, Position } from '@xyflow/react'
 import { LuKeyRound, LuLink } from 'react-icons/lu'
 import type { Column, Index } from '../db/types'
 import { columnRowHeight } from '../layout/sizing'
-import { INDEX_STYLES } from '../theme/indexStyle'
 import { typeIcon } from '../theme/typeIcons'
 import { IndexBadge } from './IndexBadge'
 import { handleId } from './handles'
@@ -11,6 +10,8 @@ interface Props {
   column: Column
   indexes: Index[]
   isForeignKey: boolean
+  /** Colour per index name (see `indexColors`). */
+  colors: Map<string, string>
 }
 
 const SIDES = [
@@ -19,14 +20,14 @@ const SIDES = [
 ] as const
 
 /** Colour of the first multi-column index touching the column, if any (the row's group highlight). */
-const groupColor = (indexes: Index[]): string | undefined => {
+const groupColor = (indexes: Index[], colors: Map<string, string>): string | undefined => {
   const group = indexes.find((i) => i.columns.length > 1)
-  return group && INDEX_STYLES[group.kind].color
+  return group && colors.get(group.name)
 }
 
-export function ColumnRow({ column, indexes, isForeignKey }: Props) {
+export function ColumnRow({ column, indexes, isForeignKey, colors }: Props) {
   const TypeIcon = typeIcon(column.typeName, column.typeCategory)
-  const color = groupColor(indexes)
+  const color = groupColor(indexes, colors)
   return (
     <div
       className={color ? 'column-row grouped' : 'column-row'}
@@ -48,7 +49,7 @@ export function ColumnRow({ column, indexes, isForeignKey }: Props) {
         </span>
         <span className="column-badges">
           {indexes.map((index) => (
-            <IndexBadge key={index.name} index={index} />
+            <IndexBadge key={index.name} index={index} color={colors.get(index.name)} />
           ))}
         </span>
         <span

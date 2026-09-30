@@ -17,7 +17,6 @@
 
 - [x] Views, materialized views, partitions (nested in parent) and table functions: introspection, distinct icons/colours, dependency edges
 
-## Ideas / next
+- [x] Overlapping multi-column index groups of one kind get distinct colours; self-referencing FKs draw a loop
 
-- [ ] Distinguish overlapping multi-column indexes of the same kind (per-group colour variants)
-- [ ] Self-referencing FK edges render as a short stub; give them a loop
+## Ideas / next

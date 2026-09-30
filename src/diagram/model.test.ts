@@ -83,4 +83,30 @@ describe('buildEdges', () => {
     })
     expect(edge!.style).toMatchObject({ stroke: 'var(--neon-cyan)' })
   })
+
+  it('loops a self-referencing FK out of the right side of its own node', () => {
+    const tree = makeTable({
+      name: 'categories',
+      columns: [makeColumn('id'), makeColumn('parent_id')],
+      foreignKeys: [
+        {
+          name: 'fk_parent',
+          columns: ['parent_id'],
+          refSchema: 'public',
+          refTable: 'categories',
+          refColumns: ['id'],
+          onUpdate: 'a',
+          onDelete: 'a',
+        },
+      ],
+    })
+    const [edge] = buildEdges(makeSchema([tree]), {})
+    expect(edge).toMatchObject({
+      source: 'public.categories',
+      target: 'public.categories',
+      sourceHandle: 'parent_id:source:right',
+      targetHandle: 'id:target:right',
+      pathOptions: { offset: 36 },
+    })
+  })
 })
