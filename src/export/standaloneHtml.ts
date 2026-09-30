@@ -1,14 +1,18 @@
-import type { TableNode } from '../diagram/model'
+import type { Schema } from '../db/types'
+import type { Point } from '../layout/keys'
 import type { ViewerPayload } from '../viewer/payload'
 import viewerTemplate from 'virtual:viewer-template'
 
 const DATA_PLACEHOLDER = '"__DIAGRAM_DATA__"'
 
-export function payloadFromNodes(nodes: TableNode[]): ViewerPayload {
-  return {
-    schema: { tables: nodes.map((n) => n.data.table) },
-    positions: Object.fromEntries(nodes.map((n) => [n.id, n.position])),
-  }
+interface PositionedNode {
+  id: string
+  position: Point
+}
+
+/** The schema as drawn plus where each node sits now (including anything the user dragged). */
+export function payloadFromSchema(schema: Schema, nodes: PositionedNode[]): ViewerPayload {
+  return { schema, positions: Object.fromEntries(nodes.map((n) => [n.id, n.position])) }
 }
 
 /** JSON safe to embed in a script tag: `<` is escaped so `</script>` can never appear. */
@@ -21,5 +25,5 @@ export function injectPayload(template: string, payload: ViewerPayload): string 
   return template.replace(DATA_PLACEHOLDER, () => embeddableJson(payload))
 }
 
-export const buildStandaloneHtml = (nodes: TableNode[]): string =>
-  injectPayload(viewerTemplate, payloadFromNodes(nodes))
+export const buildStandaloneHtml = (schema: Schema, nodes: PositionedNode[]): string =>
+  injectPayload(viewerTemplate, payloadFromSchema(schema, nodes))

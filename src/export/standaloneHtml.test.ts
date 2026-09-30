@@ -1,20 +1,10 @@
 import { describe, expect, it } from 'vitest'
+import { makeSchema, makeTable } from '../db/builders'
 import type { ViewerPayload } from '../viewer/payload'
 import { injectPayload } from './standaloneHtml'
 
 const PAYLOAD: ViewerPayload = {
-  schema: {
-    tables: [
-      {
-        schema: 'public',
-        name: '</script><b>',
-        comment: 'a <tag> & "quotes"',
-        columns: [],
-        indexes: [],
-        foreignKeys: [],
-      },
-    ],
-  },
+  schema: makeSchema([makeTable({ name: '</script><b>', comment: 'a <tag> & "quotes"' })]),
   positions: { 'public.</script><b>': { x: 1, y: 2 } },
 }
 
@@ -35,7 +25,7 @@ describe('injectPayload', () => {
   it('does not interpret $ patterns in user text', () => {
     const payload = {
       ...PAYLOAD,
-      schema: { tables: [{ ...PAYLOAD.schema.tables[0]!, comment: "$& $1 $'" }] },
+      schema: makeSchema([{ ...PAYLOAD.schema.tables[0]!, comment: "$& $1 $'" }]),
     }
     expect(injectPayload(TEMPLATE, payload)).toContain("$& $1 $'")
   })

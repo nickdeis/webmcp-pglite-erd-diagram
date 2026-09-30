@@ -20,4 +20,3 @@
 - [ ] Distinguish overlapping multi-column indexes of the same kind (per-group colour variants)
 - [ ] Self-referencing FK edges render as a short stub; give them a loop
 - [ ] Views, materialized views, partitions
-- [ ] Re-fit the diagram viewport after an agent rewrites the whole schema

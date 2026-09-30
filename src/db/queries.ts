@@ -3,11 +3,16 @@ const USER_RELATION = `
   and n.nspname not like 'pg_toast%'
   and not exists (select 1 from pg_depend dep where dep.objid = c.oid and dep.deptype = 'e')`
 
+/** Tables, partitioned tables, views and materialized views (partitions are nested, not listed). */
+const RELATIONS = `('r', 'p', 'v', 'm')`
+
 export const TABLES_SQL = `
-  select c.oid::int as oid, n.nspname as schema, c.relname as name,
-         obj_description(c.oid, 'pg_class') as comment
+  select c.oid::int as oid, n.nspname as schema, c.relname as name, c.relkind::text as relkind,
+         obj_description(c.oid, 'pg_class') as comment,
+         case when c.relkind = 'p' then pg_get_partkeydef(c.oid) end as partition_key,
+         case when c.relkind in ('v', 'm') then pg_get_viewdef(c.oid, true) end as definition
   from pg_class c join pg_namespace n on n.oid = c.relnamespace
-  where c.relkind in ('r', 'p') and ${USER_RELATION}
+  where c.relkind in ${RELATIONS} and not c.relispartition and ${USER_RELATION}
   order by n.nspname, c.relname`
 
 export const COLUMNS_SQL = `
@@ -22,7 +27,7 @@ export const COLUMNS_SQL = `
   join pg_attribute a on a.attrelid = c.oid and a.attnum > 0 and not a.attisdropped
   join pg_type t on t.oid = a.atttypid
   left join pg_attrdef d on d.adrelid = c.oid and d.adnum = a.attnum
-  where c.relkind in ('r', 'p') and ${USER_RELATION}
+  where c.relkind in ${RELATIONS} and not c.relispartition and ${USER_RELATION}
   order by c.oid, a.attnum`
 
 const CONSTRAINT_COLUMNS = (keys: string, rel: string) => `
@@ -65,5 +70,6 @@ export const INDEXES_SQL = `
   join pg_am am on am.oid = ic.relam
   where not i.indisprimary
     and i.indrelid in (select c.oid from pg_class c join pg_namespace n on n.oid = c.relnamespace
-                       where c.relkind in ('r', 'p') and ${USER_RELATION})
+                       where c.relkind in ('r', 'p', 'm') and not c.relispartition
+                         and ${USER_RELATION})
   order by i.indrelid, ic.relname`

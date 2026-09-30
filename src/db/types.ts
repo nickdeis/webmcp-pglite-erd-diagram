@@ -39,15 +39,69 @@ export interface ForeignKey {
   onDelete: string
 }
 
+export type RelationKind = 'table' | 'partitioned_table' | 'view' | 'materialized_view'
+
+/** A partition nested under its parent; `depth` 0 is a direct child, deeper levels are sub-partitions. */
+export interface Partition {
+  schema: string
+  name: string
+  /** Bound expression, e.g. `FOR VALUES FROM ('2024-01-01') TO ('2025-01-01')` or `DEFAULT`. */
+  bound: string
+  depth: number
+  /** Set when this partition is itself partitioned, e.g. `LIST (region)`. */
+  partitionKey: string | null
+}
+
+/** A table, partitioned table, view or materialized view (all share columns and indexes). */
 export interface Table {
+  kind: RelationKind
   schema: string
   name: string
   comment: string | null
   columns: Column[]
   indexes: Index[]
   foreignKeys: ForeignKey[]
+  /** e.g. `RANGE (created_at)` for partitioned tables. */
+  partitionKey: string | null
+  partitions: Partition[]
+  /** Defining query for views and materialized views. */
+  definition: string | null
+}
+
+export interface TypedValue {
+  name: string
+  /** Display type from format_type. */
+  type: string
+  typeName: string
+  typeCategory: string
+}
+
+export interface FunctionArg extends TypedValue {
+  mode: 'in' | 'inout' | 'variadic'
+}
+
+/** A function that returns rows: `RETURNS TABLE(...)`, `SETOF x`, or OUT parameters. */
+export interface TableFunction {
+  schema: string
+  name: string
+  /** Argument types as Postgres identifies the overload, e.g. `integer, text`. */
+  identityArgs: string
+  language: string
+  comment: string | null
+  args: FunctionArg[]
+  /** Returned columns; for `SETOF scalar` a single unnamed entry. */
+  returns: TypedValue[]
+  returnsSet: boolean
+}
+
+/** `source` is read by `target` (view, materialized view or function); both are node keys. */
+export interface Dependency {
+  source: string
+  target: string
 }
 
 export interface Schema {
   tables: Table[]
+  functions: TableFunction[]
+  dependencies: Dependency[]
 }

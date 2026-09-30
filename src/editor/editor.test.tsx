@@ -1,23 +1,17 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
-import type { Schema, Table } from '../db/types'
+import { makeColumn, makeSchema, makeTable } from '../db/builders'
 import { completionNamespace } from './completion'
 import { ErrorBanner } from './ErrorBanner'
 import { formatSql } from './format'
 
-const table = (name: string, columns: string[]): Table => ({
-  schema: 'public',
-  name,
-  comment: null,
-  columns: columns.map((c, i) => ({ name: c, attnum: i + 1 }) as Table['columns'][number]),
-  indexes: [],
-  foreignKeys: [],
-})
-
 describe('completionNamespace', () => {
-  it('maps table names to column names', () => {
-    const schema: Schema = { tables: [table('users', ['id', 'email'])] }
-    expect(completionNamespace(schema)).toEqual({ users: ['id', 'email'] })
+  it('maps table and view names to column names', () => {
+    const schema = makeSchema([
+      makeTable({ name: 'users', columns: [makeColumn('id'), makeColumn('email')] }),
+      makeTable({ kind: 'view', name: 'v', columns: [makeColumn('x')] }),
+    ])
+    expect(completionNamespace(schema)).toEqual({ users: ['id', 'email'], v: ['x'] })
   })
 
   it('is empty before the first successful run', () => {

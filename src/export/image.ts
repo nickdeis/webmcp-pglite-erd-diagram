@@ -1,6 +1,5 @@
-import { getNodesBounds } from '@xyflow/react'
+import { getNodesBounds, type Node } from '@xyflow/react'
 import { toPng, toSvg } from 'html-to-image'
-import type { TableNode } from '../diagram/model'
 
 export type ImageKind = 'png' | 'svg'
 
@@ -13,7 +12,7 @@ const MAX_CANVAS_SIDE = 16000
 const viewportElement = () => document.querySelector<HTMLElement>('.react-flow__viewport')!
 
 /** Render every table (not just the visible part) to a data URL, framed by `PADDING`. */
-export function renderDiagramImage(kind: ImageKind, nodes: TableNode[]): Promise<string> {
+export function renderDiagramImage(kind: ImageKind, nodes: Node[]): Promise<string> {
   const bounds = getNodesBounds(nodes)
   const width = Math.ceil(bounds.width + PADDING * 2)
   const height = Math.ceil(bounds.height + PADDING * 2)

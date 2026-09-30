@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import { viteSingleFile } from 'vite-plugin-singlefile'
-import { viewerTemplate } from './vite-plugins/viewerTemplate'
+import { viewerTemplate } from './vite-plugins/viewerTemplate.ts'
 
 const nodeSqlParserStub = fileURLToPath(new URL('./src/stubs/node-sql-parser.ts', import.meta.url))
 

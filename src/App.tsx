@@ -35,7 +35,7 @@ export function App() {
               title="Format SQL (Ctrl/Cmd+Shift+F)"
               onClick={format}
             />
-            <ExportButtons />
+            <ExportButtons schema={schema} />
           </>
         }
         editor={
