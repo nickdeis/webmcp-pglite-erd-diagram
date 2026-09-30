@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons'
-import { LuDatabaseZap, LuEye, LuLayoutGrid, LuSquareFunction, LuTable2 } from 'react-icons/lu'
+import { LuDatabaseZap, LuEye, LuLayoutGrid, LuTable2 } from 'react-icons/lu'
 import type { RelationKind } from '../db/types'
 
 export interface RelationStyle {
@@ -26,11 +26,4 @@ export const RELATION_STYLES: Record<RelationKind, RelationStyle> = {
     label: 'MATERIALIZED VIEW',
     dashed: false,
   },
-}
-
-export const FUNCTION_STYLE: RelationStyle = {
-  icon: LuSquareFunction,
-  color: 'var(--neon-pink)',
-  label: 'FUNCTION',
-  dashed: false,
 }

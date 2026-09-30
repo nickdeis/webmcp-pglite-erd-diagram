@@ -197,8 +197,7 @@
   white-space: nowrap;
 }
 
-.partition-row,
-.param-row {
+.partition-row {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -227,15 +226,6 @@
 .partition-more {
   color: var(--fg-faint);
   font-style: italic;
-}
-
-.param-row {
-  height: 24px;
-}
-
-.param-mode {
-  color: var(--fg-muted);
-  font-size: 10px;
 }
 
 .node-handle.react-flow__handle {

@@ -1,29 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { makeColumn, makeFunction, makeSchema, makeTable } from '../db/builders'
+import { makeColumn, makeSchema, makeTable } from '../db/builders'
 import { buildEdges } from './edges'
 import { nodeHandleId } from './handles'
 import { buildNodes } from './model'
 
 const users = makeTable({ name: 'users', columns: [makeColumn('id')] })
 const view = makeTable({ kind: 'view', name: 'active_users', columns: [makeColumn('id')] })
-const fn = makeFunction({ name: 'find', identityArgs: 'integer', returns: [] })
-const FN_KEY = 'public.find(integer)'
 
 const schema = makeSchema([users, view], {
-  functions: [fn],
-  dependencies: [
-    { source: 'public.users', target: 'public.active_users' },
-    { source: 'public.users', target: FN_KEY },
-  ],
+  dependencies: [{ source: 'public.users', target: 'public.active_users' }],
 })
 
 describe('buildNodes', () => {
-  it('draws tables/views and functions as separate node types keyed by their identity', () => {
+  it('draws tables and views as table nodes keyed by their identity', () => {
     const nodes = buildNodes(schema, { 'public.users': { x: 5, y: 6 } })
     expect(nodes.map((n) => [n.id, n.type])).toEqual([
       ['public.users', 'table'],
       ['public.active_users', 'table'],
-      [FN_KEY, 'function'],
     ])
     expect(nodes[0]!.position).toEqual({ x: 5, y: 6 })
     expect(nodes.every((n) => n.width! > 0 && n.height! > 0)).toBe(true)
@@ -34,7 +27,6 @@ describe('buildEdges', () => {
   const at = {
     'public.users': { x: 0, y: 0 },
     'public.active_users': { x: 400, y: 0 },
-    [FN_KEY]: { x: 400, y: 200 },
   }
 
   it('draws dashed dependency edges in the reader colour, from source right to reader left', () => {
@@ -46,9 +38,6 @@ describe('buildEdges', () => {
       targetHandle: nodeHandleId('target', 'left'),
     })
     expect(toView.style).toMatchObject({ stroke: 'var(--neon-green)', strokeDasharray: '6 4' })
-    expect(edges.find((e) => e.target === FN_KEY)!.style).toMatchObject({
-      stroke: 'var(--neon-pink)',
-    })
   })
 
   it('flips the sides when the reader sits left of its source', () => {

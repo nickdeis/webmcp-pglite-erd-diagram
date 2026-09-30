@@ -1,9 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import { LuEye } from 'react-icons/lu'
-import { makeFunction } from '../db/builders'
 import type { Partition } from '../db/types'
-import { FunctionBody } from './FunctionBody'
 import { PartitionList } from './PartitionList'
 import { RelationHeader } from './RelationHeader'
 
@@ -54,33 +52,5 @@ describe('PartitionList', () => {
     expect(renderToStaticMarkup(<PartitionList partitions={[p('a')]} hiddenCount={5} />)).toContain(
       '+ 5 more',
     )
-  })
-})
-
-describe('FunctionBody', () => {
-  const typed = { type: 'text', typeName: 'text', typeCategory: 'S' }
-
-  it('shows arguments (with non-default modes) and returned columns', () => {
-    const fn = makeFunction({
-      args: [
-        { name: 'a', mode: 'in', ...typed },
-        { name: 'b', mode: 'inout', ...typed },
-      ],
-      returns: [{ name: 'out1', ...typed }],
-    })
-    const html = renderToStaticMarkup(<FunctionBody fn={fn} />)
-    expect(html).toContain('Arguments')
-    expect(html).toContain('Returns rows')
-    expect(html.match(/param-mode/g)).toHaveLength(1)
-    expect(html).toContain('inout')
-    expect(html).toContain('out1')
-  })
-
-  it('omits the arguments section for zero-argument functions and says "Returns" for non-set ones', () => {
-    const html = renderToStaticMarkup(
-      <FunctionBody fn={makeFunction({ returnsSet: false, returns: [{ name: 'x', ...typed }] })} />,
-    )
-    expect(html).not.toContain('Arguments')
-    expect(html).toContain('>Returns<')
   })
 })

@@ -9,13 +9,12 @@ export const PARTITIONS_SQL = `
   where c.relispartition
   order by c.relname`
 
-/** What each view / materialized view reads: tables, views, and set-returning functions. */
+/** What each view / materialized view reads: tables and other views. */
 export const VIEW_DEPENDENCIES_SQL = `
-  select distinct v.oid::int as target_oid, d.refobjid::int as source_oid,
-         d.refclassid::regclass::text as source_class
+  select distinct v.oid::int as target_oid, d.refobjid::int as source_oid
   from pg_class v
   join pg_rewrite r on r.ev_class = v.oid
   join pg_depend d on d.classid = 'pg_rewrite'::regclass and d.objid = r.oid
-       and d.refclassid in ('pg_class'::regclass, 'pg_proc'::regclass)
+       and d.refclassid = 'pg_class'::regclass
        and d.refobjid <> v.oid
   where v.relkind in ('v', 'm')`

@@ -1,7 +1,7 @@
 import { MarkerType, type Edge } from '@xyflow/react'
 import type { Dependency, ForeignKey, Schema, Table } from '../db/types'
-import { functionKey, tableKey, type Point } from '../layout/keys'
-import { FUNCTION_STYLE, RELATION_STYLES } from '../theme/relationStyle'
+import { tableKey, type Point } from '../layout/keys'
+import { RELATION_STYLES } from '../theme/relationStyle'
 import { handleId, nodeHandleId, type HandleSide } from './handles'
 
 type Positions = Record<string, Point>
@@ -46,7 +46,7 @@ function foreignKeyEdge(table: Table, fk: ForeignKey, positions: Positions): Smo
   }
 }
 
-/** Dashed edge from what is read to the view/function that reads it, coloured like the reader. */
+/** Dashed edge from what is read to the view that reads it, coloured like the reader. */
 function dependencyEdge(dep: Dependency, color: string, positions: Positions): Edge {
   const sides: Sides = facingSides(dep.source, dep.target, positions)
     ? ['right', 'left']
@@ -66,7 +66,6 @@ function dependencyEdge(dep: Dependency, color: string, positions: Positions): E
 function nodeColors(schema: Schema): Map<string, string> {
   const colors = new Map<string, string>()
   for (const t of schema.tables) colors.set(tableKey(t), RELATION_STYLES[t.kind].color)
-  for (const f of schema.functions) colors.set(functionKey(f), FUNCTION_STYLE.color)
   return colors
 }
 

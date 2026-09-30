@@ -1,4 +1,4 @@
-export { functionKey, tableKey } from '../db/keys'
+export { tableKey } from '../db/keys'
 
 export interface Point {
   x: number

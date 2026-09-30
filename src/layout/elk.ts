@@ -1,7 +1,7 @@
 import ELK from 'elkjs/lib/elk.bundled.js'
 import type { Schema } from '../db/types'
-import { functionKey, tableKey, type Point } from './keys'
-import { functionSize, tableSize } from './sizing'
+import { tableKey, type Point } from './keys'
+import { tableSize } from './sizing'
 
 const LAYOUT_OPTIONS = {
   'elk.algorithm': 'layered',
@@ -14,17 +14,14 @@ const LAYOUT_OPTIONS = {
 const elk = new ELK()
 
 /**
- * Lay nodes out left-to-right: referenced tables and dependency sources sit left of the tables, views and
- * functions that point at / read them. Returns top-left positions by node key.
+ * Lay nodes out left-to-right: referenced tables and dependency sources sit left of the tables and views
+ * that point at / read them. Returns top-left positions by node key.
  */
 export async function layoutSchema(schema: Schema): Promise<Record<string, Point>> {
   const graph = {
     id: 'root',
     layoutOptions: LAYOUT_OPTIONS,
-    children: [
-      ...schema.tables.map((t) => ({ id: tableKey(t), ...tableSize(t) })),
-      ...schema.functions.map((f) => ({ id: functionKey(f), ...functionSize(f) })),
-    ],
+    children: schema.tables.map((t) => ({ id: tableKey(t), ...tableSize(t) })),
     edges: layoutEdges(schema),
   }
   const laid = await elk.layout(graph)
@@ -39,7 +36,7 @@ interface LayoutEdge {
 
 /** FK and dependency edges between drawn nodes; self-references would only confuse the layering. */
 function layoutEdges(schema: Schema): LayoutEdge[] {
-  const keys = new Set([...schema.tables.map(tableKey), ...schema.functions.map(functionKey)])
+  const keys = new Set(schema.tables.map(tableKey))
   const foreignKeys = schema.tables.flatMap((t) =>
     t.foreignKeys.map((fk) => ({
       id: `${tableKey(t)}:${fk.name}`,

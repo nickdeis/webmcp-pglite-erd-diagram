@@ -55,11 +55,4 @@ create table audit_log_2025 partition of audit_log
 create table audit_log_2026 partition of audit_log
   for values from ('2026-01-01') to ('2027-01-01');
 create table audit_log_default partition of audit_log default;
-
-create function posts_by_author(author uuid)
-  returns table (id bigint, title text) language sql stable
-  begin atomic
-    select id, title from posts where author_id = author;
-  end;
-comment on function posts_by_author(uuid) is 'All posts written by one user';
 `

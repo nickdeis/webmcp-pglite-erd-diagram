@@ -8,12 +8,11 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import './diagram.css'
-import { FunctionNode } from './FunctionNode'
 import type { DiagramNode } from './model'
 import { FitOnFirstLayout } from './FitOnFirstLayout'
 import { TableNode } from './TableNode'
 
-const nodeTypes = { table: TableNode, function: FunctionNode }
+const nodeTypes = { table: TableNode }
 
 interface Props {
   nodes: DiagramNode[]

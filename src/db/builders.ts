@@ -1,4 +1,4 @@
-import type { Column, Schema, Table, TableFunction } from './types'
+import type { Column, Schema, Table } from './types'
 
 /** Test helpers: build schema objects with only the fields a test cares about. */
 export const makeColumn = (name: string, overrides: Partial<Column> = {}): Column => ({
@@ -30,21 +30,8 @@ export const makeTable = (overrides: Partial<Table> = {}): Table => ({
   ...overrides,
 })
 
-export const makeFunction = (overrides: Partial<TableFunction> = {}): TableFunction => ({
-  schema: 'public',
-  name: 'f',
-  identityArgs: '',
-  language: 'sql',
-  comment: null,
-  args: [],
-  returns: [],
-  returnsSet: true,
-  ...overrides,
-})
-
 export const makeSchema = (tables: Table[] = [], overrides: Partial<Schema> = {}): Schema => ({
   tables,
-  functions: [],
   dependencies: [],
   ...overrides,
 })

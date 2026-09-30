@@ -6,7 +6,7 @@ const SIDES = [
   ['right', Position.Right],
 ] as const
 
-/** Whole-node connection points in the header, used by view/function dependency edges. */
+/** Whole-node connection points in the header, used by view dependency edges. */
 export function NodeHandles() {
   return SIDES.map(([side, position]) => (
     <span key={side}>

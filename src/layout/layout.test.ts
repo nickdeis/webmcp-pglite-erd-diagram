@@ -20,14 +20,11 @@ describe('layout', () => {
     expect(pos['public.posts']!.x).toBeGreaterThan(pos['public.users']!.x)
   }, 60_000)
 
-  it('places views and functions right of what they read, and includes every node', async () => {
+  it('places views right of what they read, and includes every node', async () => {
     const schema = await schemaFromDdl(await createDb(), FIXTURE_OBJECTS_DDL)
     const pos = await layoutSchema(schema)
-    const fnKey = 'public.posts_by(author uuid, max_rows integer)'
-    expect(Object.keys(pos)).toHaveLength(schema.tables.length + schema.functions.length)
+    expect(Object.keys(pos)).toHaveLength(schema.tables.length)
     expect(pos['public.active_users']!.x).toBeGreaterThan(pos['public.users']!.x)
     expect(pos['public.chained']!.x).toBeGreaterThan(pos['public.active_users']!.x)
-    expect(pos[fnKey]!.x).toBeGreaterThan(pos['public.posts']!.x)
-    expect(pos['public.uses_fn']!.x).toBeGreaterThan(pos[fnKey]!.x)
   }, 60_000)
 })

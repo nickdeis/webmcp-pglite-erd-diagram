@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { FUNCTION_STYLE, RELATION_STYLES } from './relationStyle'
+import { RELATION_STYLES } from './relationStyle'
 
 describe('relation styles', () => {
-  const all = [...Object.values(RELATION_STYLES), FUNCTION_STYLE]
+  const all = Object.values(RELATION_STYLES)
 
   it('gives every kind its own colour and icon', () => {
     expect(new Set(all.map((s) => s.color)).size).toBe(all.length)

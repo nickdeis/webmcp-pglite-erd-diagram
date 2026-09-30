@@ -68,33 +68,7 @@ export interface Table {
   definition: string | null
 }
 
-export interface TypedValue {
-  name: string
-  /** Display type from format_type. */
-  type: string
-  typeName: string
-  typeCategory: string
-}
-
-export interface FunctionArg extends TypedValue {
-  mode: 'in' | 'inout' | 'variadic'
-}
-
-/** A function that returns rows: `RETURNS TABLE(...)`, `SETOF x`, or OUT parameters. */
-export interface TableFunction {
-  schema: string
-  name: string
-  /** Argument types as Postgres identifies the overload, e.g. `integer, text`. */
-  identityArgs: string
-  language: string
-  comment: string | null
-  args: FunctionArg[]
-  /** Returned columns; for `SETOF scalar` a single unnamed entry. */
-  returns: TypedValue[]
-  returnsSet: boolean
-}
-
-/** `source` is read by `target` (view, materialized view or function); both are node keys. */
+/** `source` is read by `target` view or materialized view; both are node keys. */
 export interface Dependency {
   source: string
   target: string
@@ -102,6 +76,5 @@ export interface Dependency {
 
 export interface Schema {
   tables: Table[]
-  functions: TableFunction[]
   dependencies: Dependency[]
 }

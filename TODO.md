@@ -15,11 +15,13 @@
 
 - [x] WebMCP: five tools (`read_sql`, `format_sql`, `validate_sql`, `write_sql`, `read_schema`), lazy polyfill, restore bar, spec updated; verified in Chrome (dev + production build)
 
-- [x] Views, materialized views, partitions (nested in parent) and table functions: introspection, distinct icons/colours, dependency edges
+- [x] Views, materialized views, partitions (nested in parent): introspection, distinct icons/colours, dependency edges
 
 - [x] Overlapping multi-column index groups of one kind get distinct colours; self-referencing FKs draw a loop
 
 - [x] Agent bridge: vendored `@mcp-b/webmcp-local-relay` embed behind an opt-in toolbar toggle so Claude Desktop / Cursor / Claude Code can use the tools; verified with a real relay (`scripts/verify-relay.mjs`); part-2 spec folded into `specs/webmcp.md`
+
+- [x] Removed table functions as a feature: `$$` function bodies leave no `pg_depend` entry, so the diagram could not link a function to the tables it reads
 
 ## Ideas / next
 

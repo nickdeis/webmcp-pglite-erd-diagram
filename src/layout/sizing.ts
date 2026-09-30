@@ -1,5 +1,5 @@
-import type { Table, TableFunction } from '../db/types'
-import { FUNCTION_STYLE, RELATION_STYLES } from '../theme/relationStyle'
+import type { Table } from '../db/types'
+import { RELATION_STYLES } from '../theme/relationStyle'
 import { formatBound } from './partitionBound'
 
 /** Pixel metrics shared by layout (sizing) and rendering (node styles). */
@@ -12,7 +12,6 @@ export const METRICS = {
   sectionHeight: 22,
   indexRowHeight: 24,
   partitionRowHeight: 22,
-  paramRowHeight: 24,
   /** More partitions than this collapse into a "+N more" row. */
   maxPartitionRows: 8,
   minWidth: 220,
@@ -74,18 +73,4 @@ function tableHeight(table: Table): number {
   const partitionRows = visiblePartitions(table).length + (hiddenPartitionCount(table) > 0 ? 1 : 0)
   const partitions = partitionRows > 0 ? m.sectionHeight + partitionRows * m.partitionRowHeight : 0
   return header + columns + partitions + (table.indexes.length ? m.sectionHeight + indexes : 0)
-}
-
-export function functionSize(fn: TableFunction): Size {
-  const m = METRICS
-  const header = chars(fn.name.length + FUNCTION_STYLE.label.length) + 90
-  const params = [...fn.args, ...fn.returns].map((p) => chars(p.name.length + p.type.length) + 80)
-  const comment = chars(fn.comment?.length ?? 0) + 40
-  const argsHeight = fn.args.length > 0 ? m.sectionHeight + fn.args.length * m.paramRowHeight : 0
-  const returnsHeight = m.sectionHeight + fn.returns.length * m.paramRowHeight
-  const commentHeight = fn.comment ? m.tableCommentHeight : 0
-  return {
-    width: clampWidth(header, comment, ...params),
-    height: m.headerHeight + commentHeight + argsHeight + returnsHeight,
-  }
 }

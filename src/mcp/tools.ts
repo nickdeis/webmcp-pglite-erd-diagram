@@ -97,8 +97,8 @@ export function createTools(deps: ToolDeps): AnyTool[] {
       name: 'read_schema',
       description:
         'Returns the schema the current editor DDL produces: tables, views, materialized views (kind field), partitioned tables with ' +
-        'their nested partitions and bounds, row-returning functions (arguments and returned columns), columns (type, ' +
-        'nullability, default, comment), indexes (kind, columns), foreign keys, comments and view/function dependencies. ' +
+        'their nested partitions and bounds, columns (type, ' +
+        'nullability, default, comment), indexes (kind, columns), foreign keys, comments and view dependencies. ' +
         'Throws if the current DDL is invalid.',
       annotations: READ_ONLY,
       execute: async () => deps.run(deps.getDdl()),

@@ -1,15 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import { FIXTURE_OBJECTS_DDL } from './fixtureObjects'
 import { runDdl } from './instance'
-import type { Schema, Table, TableFunction } from './types'
+import type { Schema, Table } from './types'
 
 let schema: Schema
 const table = (name: string) => schema.tables.find((t) => t.name === name) as Table
-const fn = (name: string) => schema.functions.find((f) => f.name === name) as TableFunction
-const key = (name: string) =>
-  schema.functions
-    .map((f) => `${f.schema}.${f.name}(${f.identityArgs})`)
-    .find((k) => k.includes(`.${name}(`))!
 
 beforeAll(async () => {
   schema = await runDdl(FIXTURE_OBJECTS_DDL)
@@ -26,7 +21,6 @@ describe('relation kinds', () => {
       'posts',
       'recent_events',
       'users',
-      'uses_fn',
     ])
   })
 
@@ -70,38 +64,6 @@ describe('partitions', () => {
   })
 })
 
-describe('table functions', () => {
-  it('finds row-returning functions only', () => {
-    expect(schema.functions.map((f) => f.name)).toEqual([
-      'all_emails',
-      'posts_by',
-      'stats',
-      'user_rows',
-    ])
-  })
-
-  it('reads RETURNS TABLE arguments, columns and comment', () => {
-    const f = fn('posts_by')
-    expect(f.args.map((a) => [a.name, a.type, a.mode])).toEqual([
-      ['author', 'uuid', 'in'],
-      ['max_rows', 'integer', 'in'],
-    ])
-    expect(f.returns.map((r) => [r.name, r.type])).toEqual([
-      ['id', 'bigint'],
-      ['title', 'text'],
-    ])
-    expect(f).toMatchObject({ language: 'sql', returnsSet: true, comment: 'Posts for one author' })
-    expect(f.identityArgs).toBe('author uuid, max_rows integer')
-  })
-
-  it('represents SETOF scalar, composite and OUT-parameter functions', () => {
-    expect(fn('all_emails').returns).toMatchObject([{ name: '', type: 'text' }])
-    expect(fn('user_rows').returns).toMatchObject([{ name: '', type: 'users' }])
-    expect(fn('stats').returns.map((r) => r.name)).toEqual(['total', 'newest'])
-    expect(fn('stats').returnsSet).toBe(false)
-  })
-})
-
 describe('dependencies', () => {
   const has = (source: string, target: string) =>
     schema.dependencies.some((d) => d.source === source && d.target === target)
@@ -116,12 +78,6 @@ describe('dependencies', () => {
 
   it('resolves a read partition to its drawn parent', () => {
     expect(has('public.events', 'public.recent_events')).toBe(true)
-  })
-
-  it('links functions to relations they read or return, and views to functions they call', () => {
-    expect(has('public.posts', key('posts_by'))).toBe(true)
-    expect(has('public.users', key('user_rows'))).toBe(true)
-    expect(has(key('posts_by'), 'public.uses_fn')).toBe(true)
   })
 
   it('has no self edges or duplicates', () => {
