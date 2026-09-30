@@ -1,7 +1,4 @@
-export interface DdlError {
-  message: string
-  line: number | null
-}
+import type { DdlError } from '../db/ddlError'
 
 /** Pure display: the Postgres error for the current DDL, if any. */
 export function ErrorBanner({ error }: { error: DdlError | null }) {
