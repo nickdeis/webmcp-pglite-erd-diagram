@@ -2,6 +2,7 @@ import { Handle, Position } from '@xyflow/react'
 import { LuKeyRound, LuLink } from 'react-icons/lu'
 import type { Column, Index } from '../db/types'
 import { columnRowHeight } from '../layout/sizing'
+import { INDEX_STYLES } from '../theme/indexStyle'
 import { typeIcon } from '../theme/typeIcons'
 import { IndexBadge } from './IndexBadge'
 import { handleId } from './model'
@@ -17,10 +18,20 @@ const SIDES = [
   ['right', Position.Right],
 ] as const
 
+/** Colour of the first multi-column index touching the column, if any (the row's group highlight). */
+const groupColor = (indexes: Index[]): string | undefined => {
+  const group = indexes.find((i) => i.columns.length > 1)
+  return group && INDEX_STYLES[group.kind].color
+}
+
 export function ColumnRow({ column, indexes, isForeignKey }: Props) {
   const TypeIcon = typeIcon(column.typeName, column.typeCategory)
+  const color = groupColor(indexes)
   return (
-    <div className="column-row" style={{ height: columnRowHeight(column.comment) }}>
+    <div
+      className={color ? 'column-row grouped' : 'column-row'}
+      style={{ height: columnRowHeight(column.comment), ['--group-color' as string]: color }}
+    >
       {SIDES.map(([side, position]) => (
         <span key={side}>
           <Handle id={handleId(column.name, 'source', side)} type="source" position={position} />

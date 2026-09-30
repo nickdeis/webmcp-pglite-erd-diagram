@@ -76,6 +76,19 @@
 }
 
 .diagram-pane {
+  position: relative;
   flex: 1;
   min-width: 0;
+}
+
+.diagram-status {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  pointer-events: none;
 }

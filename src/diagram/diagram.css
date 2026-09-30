@@ -174,3 +174,9 @@
   opacity: 0;
   top: 13px;
 }
+
+/* Members of a multi-column index share the index colour. */
+.column-row.grouped {
+  background: color-mix(in srgb, var(--group-color) 7%, transparent);
+  box-shadow: inset 3px 0 0 var(--group-color);
+}
