@@ -42,8 +42,6 @@
     "dev": "vite",
     "prebuild": "bun run build:viewer",
     "build": "tsc --noEmit && vite build",
-    "prebuild:single": "bun run build:viewer",
-    "build:single": "vite build --mode single",
     "build:viewer": "vite build --mode viewer",
     "test": "vitest run",
     "format": "prettier --write ."

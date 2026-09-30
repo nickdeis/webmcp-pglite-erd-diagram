@@ -11,9 +11,10 @@
 - [x] M6: static + single-file builds verified offline (file://); PGlite assets deduped (54 MB → 26 MB); node-sql-parser stubbed (6.3 → 4.0 MB JS)
 - [x] M7: multi-column index group highlight, loading/empty overlay, sample DDL
 
+- [x] Removed the single-file app build (`build:single`, `inlinePgliteAssets`); HTML export covers it
+
 ## Ideas / next
 
 - [ ] Distinguish overlapping multi-column indexes of the same kind (per-group colour variants)
 - [ ] Self-referencing FK edges render as a short stub; give them a loop
 - [ ] Views, materialized views, partitions
-- [ ] Shrink the single file (compress WASM/data, inflate with DecompressionStream)

@@ -20,14 +20,11 @@ flowchart LR
 ```mermaid
 flowchart TD
   Src[src/] --> Static[bun run build: dist/ static multi-file]
-  Src --> Single[bun run build:single: one HTML file, PGlite inlined]
   Src --> Viewer[bun run build:viewer: diagram-only template]
-  Viewer -->|?raw import| Single
   Viewer -->|?raw import| Static
 ```
 
-## Single-file asset handling
+## Bundle notes
 
-PGlite references each big asset (`pglite.wasm`, `initdb.wasm`, `pglite.data`) several times. In the single-file
-build `vite-plugins/inlinePgliteAssets.ts` routes all references through one virtual module so each is inlined
-once (54 MB → 26 MB). `prettier-plugin-sql`'s unused `node-sql-parser` is aliased to a stub (`src/stubs/`).
+There is no single-file app build: inlining the Postgres WASM and data bundle made it ~26 MB, and the diagram-only HTML
+export covers that need. `prettier-plugin-sql`'s unused `node-sql-parser` is aliased to a stub (`src/stubs/`).
