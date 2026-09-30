@@ -12,3 +12,5 @@ M6 build targets (single-file build later removed) · M7 polish. Progress is tra
 
 Decided: palette from VS Code `2026-dark.json`; formatting via prettier + prettier-plugin-sql (wraps sql-formatter).
 The single-file app build was dropped (26 MB); the diagram-only HTML export replaces it.
+
+WebMCP (specs/webmcp.md): five tools over `document.modelContext`, lazy `@mcp-b/webmcp-polyfill`, restore bar after agent writes.

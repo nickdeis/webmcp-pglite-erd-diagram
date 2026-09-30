@@ -12,6 +12,7 @@ resulting catalog is rendered as an interactive diagram (React Flow + ELK). Noth
 - Extensions available in DDL: `pg_trgm`, `btree_gin`, `btree_gist`, `vector`
 - DDL is saved in the URL hash (shareable, never sent anywhere) and localStorage
 - Export high-res PNG, SVG, or a standalone diagram-only HTML file (no DDL, no PGlite)
+- [WebMCP](specs/webmcp.md) tools (`read_sql`, `format_sql`, `validate_sql`, `write_sql`, `read_schema`) so an LLM extension can edit the schema for people who don't write SQL; the polyfill is lazy-loaded and never part of the HTML export. An "Updated by AI · Restore previous" bar undoes an agent's rewrite
 - VS Code "2026 Dark" palette with neon accents
 
 ## Run

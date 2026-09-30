@@ -92,3 +92,33 @@
   font-size: 13px;
   pointer-events: none;
 }
+
+.restore-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--neon-violet) 12%, var(--bg-panel));
+  border-top: 1px solid var(--neon-violet);
+  color: var(--fg);
+  font-size: 12px;
+}
+
+.restore-banner span {
+  flex: 1;
+  color: var(--neon-violet);
+}
+
+.restore-banner button {
+  padding: 2px 8px;
+  color: var(--fg);
+  background: var(--bg-widget);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.restore-banner button:hover {
+  border-color: var(--neon-violet);
+}

@@ -6,6 +6,8 @@ import { SAMPLE_DDL } from './db/sample'
 import { useSchema } from './db/useSchema'
 import { Diagram } from './diagram/Diagram'
 import { useDiagram } from './diagram/useDiagram'
+import { useWebMcp } from './mcp/useWebMcp'
+import { RestoreBanner } from './ui/RestoreBanner'
 import { usePersistedDdl } from './state/usePersistedDdl'
 import { ReactFlowProvider } from '@xyflow/react'
 import { LuWandSparkles } from 'react-icons/lu'
@@ -18,6 +20,7 @@ import './theme/tokens.css'
 export function App() {
   const [ddl, setDdl] = usePersistedDdl(SAMPLE_DDL)
   const { schema, error, loading } = useSchema(ddl)
+  const { previousDdl, restore, dismiss } = useWebMcp(ddl, setDdl)
   const { nodes, edges, onNodesChange } = useDiagram(schema)
   const format = () => formatSql(ddl).then(setDdl, console.error)
 
@@ -43,6 +46,7 @@ export function App() {
               onFormat={format}
               namespace={completionNamespace(schema)}
             />
+            <RestoreBanner previousDdl={previousDdl} onRestore={restore} onDismiss={dismiss} />
             <ErrorBanner error={error} />
           </>
         }

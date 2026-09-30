@@ -13,8 +13,11 @@
 
 - [x] Removed the single-file app build (`build:single`, `inlinePgliteAssets`); HTML export covers it
 
+- [x] WebMCP: five tools (`read_sql`, `format_sql`, `validate_sql`, `write_sql`, `read_schema`), lazy polyfill, restore bar, spec updated; verified in Chrome (dev + production build)
+
 ## Ideas / next
 
 - [ ] Distinguish overlapping multi-column indexes of the same kind (per-group colour variants)
 - [ ] Self-referencing FK edges render as a short stub; give them a loop
 - [ ] Views, materialized views, partitions
+- [ ] Re-fit the diagram viewport after an agent rewrites the whole schema

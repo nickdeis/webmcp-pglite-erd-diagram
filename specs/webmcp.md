@@ -31,24 +31,32 @@ type MCPTools = {
   read_sql: () => Promise<string>
   /** Formats the SQL (prettier + prettier-plugin-sql, lower-case keywords) and returns it. Does not touch the editor. */
   format_sql: (args: { sql: string }) => Promise<string>
-  /** Runs the SQL against a scratch PGlite instance (rolled back). Resolves if it is valid; rejects with `Line N: message`. */
-  validate_sql: (args: { sql: string }) => Promise<void>
+  /** Runs the SQL against a scratch PGlite instance (rolled back). Resolves "DDL is valid."; rejects with `Line N: message`. */
+  validate_sql: (args: { sql: string }) => Promise<string>
   /**
-   * Formats and validates the SQL, then replaces the editor content with the formatted result.
-   * Rejects (and changes nothing) if formatting or validation fails.
+   * Validates the SQL as submitted, formats it, then replaces the editor content with the formatted result.
+   * Resolves "Wrote N lines to the editor."; rejects (and changes nothing) if validation or formatting fails.
    */
-  write_sql: (args: { sql: string }) => Promise<void>
+  write_sql: (args: { sql: string }) => Promise<string>
   /** Returns the schema (tables, columns, indexes, foreign keys, comments) that the current editor DDL produces. */
   read_schema: () => Promise<Schema> // Schema from src/db/types.ts
 }
 ```
 
 Each is registered with a `name`, a `description`, and a JSON-Schema `inputSchema` (`{ sql: string }` for the three that take
-input). `read_schema` runs a fresh introspection of the current editor content, so it is accurate immediately after
+input). Descriptions tell the LLM the script is complete and always runs against an empty database. `read_schema` runs a fresh introspection of the current editor content, so it is accurate immediately after
 `write_sql` (it is not subject to the editor's 350 ms debounce).
 
-Open detail to confirm during implementation: how the polyfill serialises a `void` result. If `undefined` is not accepted,
-`validate_sql` / `write_sql` resolve `{ ok: true }` instead and this spec is updated.
+Result shapes (settled against the polyfill's behaviour): the polyfill JSON-stringifies object results and sends any other
+value through `String()`, so a `void`/`undefined` result would reach the agent as the literal text `"undefined"`. Tools
+therefore return short confirmation strings instead. Thrown errors reach the agent as
+`Tool invocation failed: <message>`, so our `Line N: ...` message survives.
+
+`write_sql` validates the SQL _as submitted_ (before formatting) so the `Line N` in an error points into the agent's own
+text, not into a reformatted copy.
+
+Read-only tools (`read_sql`, `format_sql`, `validate_sql`, `read_schema`) carry `annotations: { readOnlyHint: true }`;
+`write_sql` does not.
 
 ## Architecture
 
@@ -67,6 +75,11 @@ flowchart LR
 - `mcp/tools.ts` — pure `createTools(deps)` factory; `mcp/register.ts` — lazy polyfill + `registerTool` with an
   `AbortController` for cleanup; `mcp/useWebMcp.ts` — React hook wiring the latest DDL, `previousDdl` and restore.
 - `ui/RestoreBanner.tsx` — pure display for the restore bar.
+
+## Status
+
+Implemented. Verified in Chrome against both the dev server and the production build (polyfill installs lazily, five
+tools listed, `write_sql` updates editor/URL/diagram, restore bar works, invalid SQL changes nothing, no external requests).
 
 ## Also in this change
 
