@@ -1,5 +1,5 @@
 {
-  "name": "pglite-diagram",
+  "name": "webmcp-pglite-erd-diagram",
   "type": "module",
   "private": true,
   "devDependencies": {
