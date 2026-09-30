@@ -47,11 +47,17 @@ export const INDEXES_SQL = `
          obj_description(i.indexrelid, 'pg_class') as comment,
          array(select oc.opcname from unnest(i.indclass::oid[]) with ordinality k(oid, ord)
                join pg_opclass oc on oc.oid = k.oid order by k.ord) as opclasses,
-         array(select a.attname from pg_depend d
-               join pg_attribute a on a.attrelid = i.indrelid and a.attnum = d.refobjsubid
-               where d.classid = 'pg_class'::regclass and d.objid = i.indexrelid
-                 and d.refobjid = i.indrelid and d.refobjsubid > 0
-               order by a.attnum) as columns,
+         array(select s.name from (
+                 select a.attname as name, k.ord as ord
+                 from unnest(i.indkey::int2[]) with ordinality k(num, ord)
+                 join pg_attribute a on a.attrelid = i.indrelid and a.attnum = k.num
+                 union
+                 select a.attname, 1000 + a.attnum
+                 from pg_depend d
+                 join pg_attribute a on a.attrelid = i.indrelid and a.attnum = d.refobjsubid
+                 where d.classid = 'pg_class'::regclass and d.objid = i.indexrelid
+                   and d.refobjid = i.indrelid and d.refobjsubid > 0) s
+               group by s.name order by min(s.ord)) as columns,
          array(select t.typname from pg_attribute a join pg_type t on t.oid = a.atttypid
                where a.attrelid = i.indexrelid order by a.attnum) as key_types
   from pg_index i

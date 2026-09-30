@@ -1,14 +1,5 @@
 export type IndexKind =
-  | 'btree'
-  | 'hash'
-  | 'gin'
-  | 'gist'
-  | 'spgist'
-  | 'brin'
-  | 'fts'
-  | 'trigram'
-  | 'vector'
-  | 'other'
+  'btree' | 'hash' | 'gin' | 'gist' | 'spgist' | 'brin' | 'fts' | 'trigram' | 'vector' | 'other'
 
 export interface Column {
   name: string

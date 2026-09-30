@@ -49,6 +49,7 @@ describe('introspect', () => {
   it('attributes indexes to their columns, including expressions', () => {
     expect(index('posts', 'posts_body_fts').columns).toEqual(['body'])
     expect(index('posts', 'posts_author_title').columns).toEqual(['author_id', 'title'])
+    expect(index('users', 'users_email_key').columns).toEqual(['email'])
     expect(index('posts', 'posts_author_title').comment).toBe('Author feed')
   })
 

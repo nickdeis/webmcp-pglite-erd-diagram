@@ -46,3 +46,4 @@ I'd would like to create an ERD diagram tool for postgres using pglite. It shoul
 - `vite.config.ts` — Vite config; `--mode single` / `--mode viewer` inline everything into one HTML file
 - `index.html` — app entry HTML
 - `README.md`, `DESIGN.md`, `PLAN.md`, `TODO.md` — project docs (kept up to date after every change)
+- `scripts/` — dev helpers (see `scripts/CLAUDE.md`)

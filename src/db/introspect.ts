@@ -20,15 +20,22 @@ export async function introspect(db: Queryable): Promise<Schema> {
 }
 
 function buildTable(t: any, columns: any[], constraints: any[], indexes: any[]): Table {
-  const own = <R extends { table_oid: number }>(list: R[]) => list.filter((r) => r.table_oid === t.oid)
-  const primaryKey = new Set(own(constraints).filter((c) => c.type === 'p').flatMap((c) => c.columns))
+  const own = <R extends { table_oid: number }>(list: R[]) =>
+    list.filter((r) => r.table_oid === t.oid)
+  const primaryKey = new Set(
+    own(constraints)
+      .filter((c) => c.type === 'p')
+      .flatMap((c) => c.columns),
+  )
   return {
     schema: t.schema,
     name: t.name,
     comment: t.comment,
     columns: own(columns).map((c) => toColumn(c, primaryKey)),
     indexes: own(indexes).map(toIndex),
-    foreignKeys: own(constraints).filter((c) => c.type === 'f').map(toForeignKey),
+    foreignKeys: own(constraints)
+      .filter((c) => c.type === 'f')
+      .map(toForeignKey),
   }
 }
 

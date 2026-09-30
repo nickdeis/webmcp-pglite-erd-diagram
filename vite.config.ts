@@ -16,6 +16,7 @@ export default defineConfig(({ mode }) => {
       outDir: inlineEverything ? `dist-${mode}` : 'dist',
       assetsInlineLimit: inlineEverything ? Number.MAX_SAFE_INTEGER : 4096,
     },
+    optimizeDeps: { exclude: ['@electric-sql/pglite', '@electric-sql/pglite-pgvector'] },
     test: { environment: 'node' },
   }
 })
