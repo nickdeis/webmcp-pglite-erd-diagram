@@ -9,6 +9,7 @@ import {
 import '@xyflow/react/dist/style.css'
 import './diagram.css'
 import type { TableNode as TableNodeType } from './model'
+import { FitOnFirstLayout } from './FitOnFirstLayout'
 import { TableNode } from './TableNode'
 
 const nodeTypes = { table: TableNode }
@@ -23,17 +24,15 @@ interface Props {
 export function Diagram({ nodes, edges, onNodesChange }: Props) {
   return (
     <ReactFlow
-      // Remount once tables arrive so fitView frames them (it only runs on mount).
-      key={nodes.length > 0 ? 'ready' : 'empty'}
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
       onNodesChange={onNodesChange}
       colorMode="dark"
-      fitView
       minZoom={0.1}
       nodesConnectable={false}
     >
+      <FitOnFirstLayout />
       <Background color="#2a2b2c" gap={24} />
       <Controls showInteractive={false} />
       <MiniMap pannable zoomable nodeColor="#2a2b2c" maskColor="#12131499" />

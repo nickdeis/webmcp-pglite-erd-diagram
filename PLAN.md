@@ -11,4 +11,4 @@ Milestones: M0 bootstrap · M1 introspection · M2 diagram · M3 editor · M4 pe
 M6 build targets · M7 polish. Progress is tracked in [TODO.md](TODO.md).
 
 Decided: palette from VS Code `2026-dark.json`; formatting via prettier + prettier-plugin-sql (wraps sql-formatter).
-Open items: single-file size, bundle cost of the prettier plugin.
+Single-file build is ~26 MB (mostly the Postgres WASM + data bundle); further shrinking would need compressing assets (DecompressionStream).

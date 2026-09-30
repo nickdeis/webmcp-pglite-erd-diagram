@@ -12,7 +12,8 @@
 
 - [x] M5: PNG/SVG export (html-to-image, 3x), viewer entry, standalone diagram-only HTML export (verified offline via file://)
 
+- [x] M6: static + single-file builds verified offline (file://); PGlite assets deduped (54 MB → 26 MB); node-sql-parser stubbed (6.3 → 4.0 MB JS)
+
 ## Next
 
-- [ ] M6: static + single-file builds, offline verification
 - [ ] M7: polish (sample DDL, empty/error states)

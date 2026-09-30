@@ -1,18 +1,35 @@
 # pglite-diagram
 
 Offline ERD diagram tool for Postgres. Write DDL, [PGlite](https://pglite.dev) runs it, and the
-resulting catalog is rendered as an interactive diagram (React Flow + ELK). No network needed.
+resulting catalog is rendered as an interactive diagram (React Flow + ELK). Nothing leaves the browser.
+
+## Features
+
+- DDL editor (CodeMirror) with Postgres highlighting, autocomplete from your own tables/columns, and **Format** (prettier)
+- Live diagram: tables, columns with a type icon each, PK/FK marks, foreign-key edges
+- DB comments on tables, columns and indexes (small italic text)
+- Inline index badges per column — FTS, trigram, vector (hnsw/ivfflat), GIN, GiST, B-tree, hash, BRIN, SP-GiST — each with its own icon and neon colour; multi-column indexes colour every member column
+- Extensions available in DDL: `pg_trgm`, `btree_gin`, `btree_gist`, `vector`
+- DDL is saved in the URL hash (shareable, never sent anywhere) and localStorage
+- Export high-res PNG, SVG, or a standalone diagram-only HTML file (no DDL, no PGlite)
+- VS Code "2026 Dark" palette with neon accents
 
 ## Run
 
 ```bash
 bun install
-bun run dev            # dev server
-bun run build          # static, optimized dist/
-bun run build:single   # one self-contained HTML file (dist-single/)
-bun run build:viewer   # diagram-only viewer template (dist-viewer/)
+bun run dev            # dev server (builds the viewer template first)
+bun run build          # optimized static site in dist/ (multi-file; serve it, e.g. `bunx vite preview`)
+bun run build:single   # dist-single/index.html: one ~26 MB file, opens straight from file://
+bun run build:viewer   # dist-viewer/viewer.html: the small diagram-only template used by the HTML export
 bun run test           # vitest
 bun run format         # prettier
 ```
 
-Status: under construction — see [PLAN.md](PLAN.md) and [TODO.md](TODO.md).
+Notes:
+
+- `dist/` uses ES modules, which browsers refuse to load from `file://`; serve it or use the single file.
+- The single file is large because it embeds the Postgres WASM (~10 MB) and data bundle (~6 MB) as base64.
+- `node scripts/screenshot.mjs <url> <out.png>` drives system Chrome (playwright-core) for visual checks and lists external requests (should be none).
+
+See [DESIGN.md](DESIGN.md) for architecture, [PLAN.md](PLAN.md) and [TODO.md](TODO.md) for status.

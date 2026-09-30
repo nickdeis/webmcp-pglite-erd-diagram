@@ -14,3 +14,4 @@ Application source. Each subdirectory has its own `CLAUDE.md`.
 - `export/` — PNG/SVG/standalone HTML export (see `export/CLAUDE.md`).
 - `viewer/` — diagram-only entry for the standalone HTML (see `viewer/CLAUDE.md`).
 - `virtual.d.ts` — types for the `virtual:viewer-template` module.
+- `stubs/` — aliased stand-ins for unused heavy deps (see `stubs/CLAUDE.md`).

@@ -1,35 +1,24 @@
-import { existsSync, readFileSync } from 'node:fs'
-import { defineConfig, type Plugin } from 'vitest/config'
+import { fileURLToPath } from 'node:url'
+import { defineConfig } from 'vitest/config'
 import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 import { viteSingleFile } from 'vite-plugin-singlefile'
+import { inlinePgliteAssets } from './vite-plugins/inlinePgliteAssets'
+import { viewerTemplate } from './vite-plugins/viewerTemplate'
 
-const VIEWER_TEMPLATE = 'dist-viewer/viewer.html'
-
-/** Exposes the prebuilt diagram-only viewer as a string (empty if it has not been built yet). */
-function viewerTemplate(): Plugin {
-  const id = 'virtual:viewer-template'
-  return {
-    name: 'viewer-template',
-    resolveId: (source) => (source === id ? `\0${id}` : undefined),
-    load(loaded) {
-      if (loaded !== `\0${id}`) return
-      const html = existsSync(VIEWER_TEMPLATE) ? readFileSync(VIEWER_TEMPLATE, 'utf8') : ''
-      return `export default ${JSON.stringify(html)}`
-    },
-  }
-}
+const nodeSqlParserStub = fileURLToPath(new URL('./src/stubs/node-sql-parser.ts', import.meta.url))
 
 export default defineConfig(({ mode }) => {
   const isViewer = mode === 'viewer'
   const inlineEverything = mode === 'single' || isViewer
   return {
     base: './',
+    resolve: { alias: { 'node-sql-parser': nodeSqlParserStub } },
     plugins: [
       react(),
       babel({ presets: [reactCompilerPreset()] }),
       viewerTemplate(),
-      ...(inlineEverything ? [viteSingleFile()] : []),
+      ...(inlineEverything ? [inlinePgliteAssets(), viteSingleFile()] : []),
     ],
     build: {
       outDir: inlineEverything ? `dist-${mode}` : 'dist',
