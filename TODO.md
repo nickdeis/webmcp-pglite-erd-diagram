@@ -22,6 +22,7 @@
 - [x] Agent bridge: vendored `@mcp-b/webmcp-local-relay` embed behind an opt-in toolbar toggle so Claude Desktop / Cursor / Claude Code can use the tools; verified with a real relay (`scripts/verify-relay.mjs`); part-2 spec folded into `specs/webmcp.md`
 
 - [x] Removed table functions as a feature: `$$` function bodies leave no `pg_depend` entry, so the diagram could not link a function to the tables it reads
+- [x] Mirror `document.modelContext` onto `navigator.modelContext` so Ask Gemini can see the tools (unverified in Chrome)
 
 ## Ideas / next
 

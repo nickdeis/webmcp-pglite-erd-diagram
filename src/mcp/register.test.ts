@@ -1,6 +1,6 @@
 import type { ModelContext } from '@mcp-b/webmcp-types'
 import { describe, expect, it, vi } from 'vitest'
-import { registerWebMcpTools, type WebMcpEnv } from './register'
+import { mirrorModelContext, registerWebMcpTools, type WebMcpEnv } from './register'
 import type { AnyTool } from './tools'
 
 const TOOLS: AnyTool[] = [
@@ -63,5 +63,31 @@ describe('registerWebMcpTools', () => {
     await expect(registerWebMcpTools(TOOLS, new AbortController().signal, env)).rejects.toThrow(
       /unavailable/,
     )
+  })
+})
+
+describe('mirrorModelContext', () => {
+  const readOnlyHost = () => {
+    class Host {
+      get modelContext(): ModelContext | undefined {
+        return undefined
+      }
+    }
+    return new Host()
+  }
+
+  it('shadows a read-only prototype getter with an own property', () => {
+    const { context } = fakeContext()
+    const host = readOnlyHost()
+    mirrorModelContext(host, context)
+    expect((host as { modelContext?: ModelContext }).modelContext).toBe(context)
+  })
+
+  it('leaves a host that already exposes the same context untouched', () => {
+    const { context } = fakeContext()
+    const host = { modelContext: context }
+    mirrorModelContext(host, context)
+    expect(Object.getOwnPropertyDescriptor(host, 'modelContext')?.configurable).toBe(true)
+    expect(host.modelContext).toBe(context)
   })
 })
